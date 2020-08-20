@@ -85,8 +85,7 @@ function calculateTime(records, start, end) {
     var timesArrayIndex = 0;
 
     //deleting the last empty record
-    console.log(records.pop());
-    console.log(records);
+    records.pop();
 
     //Iterating through every record and mapping Join and Left record times to calculate time.
     //If no Left record found after Join record, meetingEndTime is considered.
@@ -169,7 +168,6 @@ function consolidate(array) {
         }        
       });
       return output;
-      //console.dir(output);
 }
 
 function printTable(tableData) {
@@ -178,6 +176,7 @@ function printTable(tableData) {
     var area = document.getElementById('reportArea');
     area.innerHTML = "";
 
+    //printing Meeting details
     var dorg = "<span><i class='fas fa-user-clock'></i>  Organizer: <strong>" + tableData[0].name + "</strong></span><br>";
     var dst= "<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong>" + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
     var det= "<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong>" + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";

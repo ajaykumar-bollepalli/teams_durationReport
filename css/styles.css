@@ -15,19 +15,24 @@
 
 .author {
     padding-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
 }
 
 .disclaimer {
     font-size: 12px;
     padding-bottom: 20px;
+    padding-top: 10px;
 }
 
-footer a {
+footer a {   
     text-decoration-style: none;
     color:  #CBCAD2;
 }
 
 footer a:hover {
     color:  #CBCAD2;
+}
+
+.credits {
+    font-size: 18px;
 }
