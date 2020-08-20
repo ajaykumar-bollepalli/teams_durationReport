@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/1e0de2fd7a.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Document</title>
+</head>
+<body id="body">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Duration Report for Microsoft Teams Attendance</h1>
+            <p class="lead">Upload the Attendance file (.csv[text]) from Teams as is.</p>
+        </div>
+    </div>    
+    <div  class="container">
+        <div class="card" id="input-div">
+            <div class="card-header">
+                <h4>Meeting Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12 col-lg-4">
+                            <label for="edate">Meeting Date: </label>
+                            <input type="date" id="edate" required>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label for="etime">Meeting End Time: </label>
+                            <input type="time" id="etime" required>
+                        </div>
+                    </div>                                
+                </div>            
+                <div class="form-group">
+                    <label for="browseFile">Select Attendance File (.csv[tab spaced]): </label>
+                    <input type="file" id="browseFile" class="form-control">
+                </div>                   
+            </div>
+            <div class="card-footer">
+                <button onclick="generate();" class="btn btn-primary float-right">Generate Report  &nbsp;<i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+        <div class="text-center" id="spinner">
+            <div class="spinner-grow" style="width: 3rem; height: 3rem;"role="status">
+            <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="card" id="report-div">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-12 col-md-2">
+                        <button onclick="back()" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</button>
+                    </div>
+                    <div class="col-12 col-md-6 text-center">
+                        <h4>Report</h4>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <button onclick="exportToExcel()" class="btn btn-success float-right"><i class="fas fa-file-export"></i> Export Report (.xlsx)</button>
+                    </div>
+                </div>                        
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Meeting Details</h4>
+                    <div id="detailSection"></div>
+                </div>
+                <div id="reportArea"></div> 
+            </div>
+            
+        </div>
+        <br>
+        <div class="alert alert-secondary" role="alert">
+            <h4 class="alert-heading">Note</h4>
+            <ul>
+                <li>First person in the Attendance File is considered as Organizer. That's how Teams work.!</li>
+                <li>The Meeting End time is used to calculate the Duration if the Attendee never left the Meeting.</li>
+                <li>If an Attendee left and rejoined the Meeting, the duration will be his/her consolidated duration of time he is present in the Meeting.</li>
+            </ul>                        
+        </div>
+    </div>
+    <footer id="footer">
+        <div class="container" >
+            <div class="author">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <span>Developed by: Ajay Kumar B</span>
+                    </div>
+                    <div class="col-12 col-lg-6 text-right">
+                        <a href="">Find this repository on <i class="fab fa-github fa-lg"></i> Github</a>
+                    </div>
+                </div>                 
+            </div>
+            <div class="disclaimer">
+                <p class="text-justify"><strong>Disclaimer: </strong> Author do not make any warranties about the completness, reliability and accuracy of the information on this site and working of the applicaiton. The names <cite>Microsoft</cite> & <cite>Microsoft Teams</cite> belong to the respective Organization, they are only used as reference. The Author or the site does not have any liability in respect to those Organizations and Applications.</p>            
+            </div>
+            
+        </div>                        
+    </footer>
+    
+    
+
+    <script src="js/main.js"></script>
+    <script lang="javascript" src="js/xlsx.full.min.js"></script>
+    <script lang="javascript" src="js/FileSaver.min.js"></script>
+</body>
+</html>

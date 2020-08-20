@@ -1,0 +1,33 @@
+.jumbotron {
+    background-color: #0E0B2B;
+    color: #ffffff;
+}
+
+.lead {
+    color: #CBCAD2;
+}
+
+#footer {
+    background-color: #0E0B2B;
+    color: #CBCAD2;
+    padding-bottom: 10px;
+}
+
+.author {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.disclaimer {
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+
+footer a {
+    text-decoration-style: none;
+    color:  #CBCAD2;
+}
+
+footer a:hover {
+    color:  #CBCAD2;
+}
