@@ -181,7 +181,7 @@ function printTable(tableData) {
     var dorg = "<span><i class='fas fa-user-clock'></i>  Organizer: <strong>" + tableData[0].name + "</strong></span><br>";
     var dst= "<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong>" + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
     var det= "<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong>" + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
-    var dd = "<span><i class='far fa-clock'></i>  Duration: <strong>" + meetingTime + " minutes </strong></span>";
+    var dd = "<span><i class='far fa-clock'></i>  Duration: <strong>" + meetingTime.toFixed(2) + " minutes </strong></span>";
 
     var detArea = document.getElementById('detailSection');
     detArea.innerHTML = dorg + dst + det + dd ;
