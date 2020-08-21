@@ -39,7 +39,11 @@
                 </div>                   
             </div>
             <div class="card-footer">
-                <button onclick="generate();" class="btn btn-primary float-right">Generate Report  &nbsp;<i class="fas fa-arrow-right"></i></button>
+                <div class="row">
+                    <div class="col-12">
+                        <button onclick="generate();" class="btn btn-primary float-right">Generate Report  &nbsp;<i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>                
             </div>
         </div>
         <div class="text-center" id="spinner">
@@ -49,19 +53,8 @@
         </div>
         <div class="card" id="report-div">
             <div class="card-header">
-                <button onclick="back()" class="btn btn-outline-secondary float-left"><i class="fas fa-arrow-left"></i> Back</button>
-                <button onclick="exportToExcel()" class="btn btn-success float-right"><i class="fas fa-file-export"></i> Export Report (.xlsx)</button>
-                <div class="row">
-                    <div class="col-12 col-md-2">
-                        
-                    </div>
-                    <div class="col-12 col-md-6 text-center">
-                        
-                    </div>
-                    <div class="col-12 col-md-4">
-                        
-                    </div>
-                </div>                        
+                <button onclick="back()" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back</button>
+                <button onclick="exportToExcel()" class="btn btn-success float-right"><i class="fas fa-file-export"></i> Export Report (.xlsx)</button>                                
             </div>
             <div class="card-body">
                 <div class="alert alert-info" role="alert">
@@ -78,7 +71,7 @@
         <div class="alert alert-secondary" role="alert">
             <h4 class="alert-heading">Note</h4>
             <ul>
-                <li>First person in the Attendance File is considered as Organizer. That's how Teams work.!</li>
+                <li>First person in the Attendance File is considered as Organizer. Meeting starts when Organizer Joins. That's how Teams work.!</li>
                 <li>The Meeting End time is used to calculate the Duration if the Attendee never left the Meeting.</li>
                 <li>If an Attendee left and rejoined the Meeting, total duration will be calculated by his/her consolidated duration of time present in the Meeting.</li>
             </ul>                        
@@ -89,7 +82,7 @@
             <div class="author">
                 <div class="row">
                     <div class="col-12 col-lg-6">
-                        <span><i class="fas fa-tools"></i> Developed by: <strong>Ajay Kumar Bollepalli</strong></span>
+                        <span><i class="fas fa-tools"></i> Developed by: <a href="https://www.linkedin.com/in/ajaykumar-bollepalli/" target="_blank"><strong>Ajay Kumar Bollepalli</strong></a></span>
                     </div>
                     <div class="col-12 col-lg-6 text-right">
                         <h5><a href="https://github.com/ajaykumar-bollepalli/teams_durationReport" target="_blank" class="badge badge-primary">Find this repository on <i class="fab fa-github fa-lg"></i> Github</a></h5>
@@ -102,7 +95,7 @@
                 <a href="https://github.com/eligrey/FileSaver.js/" target="_blank" class="badge badge-secondary"><i class="fab fa-github fa-lg"></i> FileSaver.js</a>
             </div>
             <div class="disclaimer">
-                <p class="text-justify"><strong>Disclaimer: </strong> Author do not make any warranties about the completness, reliability and accuracy of the information on this site and working of the applicaiton. The names <cite>Microsoft</cite> & <cite>Microsoft Teams</cite> belong to the respective Organization, they are only used as reference. The Author or the site does not have any liability in respect to those Organizations and Applications.</p>            
+                <p class="text-justify"><strong>Disclaimer: </strong> Author do not make any warranties about the completness, reliability and accuracy of the information on this site and working of the applicaiton. The names <cite>Microsoft</cite> & <cite>Microsoft Teams</cite> belong to the respective Organizations, and are used only as reference. The Author or the site does not have any liability in respect to those Organizations and Applications.</p>            
             </div>
             
         </div>                        
