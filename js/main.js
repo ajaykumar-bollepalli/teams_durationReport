@@ -193,7 +193,7 @@ function printTable(tableData) {
 
     //creating header row
     var tr = document.createElement('tr');
-    tr.innerHTML = "<th>S.No</th><th>Attendee Name</th><th>Duration (in minutes)</th>";
+    tr.innerHTML = "<th>S.No</th><th>Attendee Name</th><th>Duration (in minutes)</th><th>Percentage of time</th>";
 
     //appending header to table
     table.appendChild(tr);
@@ -207,19 +207,34 @@ function printTable(tableData) {
         var td1 = document.createElement('td');
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
+        var td4 = document.createElement('td');
 
         var sno = document.createTextNode(n);
         n++;
         var name = document.createTextNode(row.name);
-        var time = document.createTextNode((row.time.reduce((a,b) => a+b, 0)).toFixed(2));
+        var durationValue = (row.time.reduce((a,b) => a+b, 0)).toFixed(2);
+        var time, percent;
+
+        //checking whether the attendee joined after the given end time
+        if(durationValue > 0) {
+            time = document.createTextNode(durationValue);
+            percent = document.createTextNode(((durationValue/meetingTime)*100).toFixed(0) + '%');
+        }
+        else {
+            time = document.createTextNode('Joined after End Time.!');
+            percent = document.createTextNode('NA');
+        }
+        
 
         td1.appendChild(sno);
         td2.appendChild(name);
         td3.appendChild(time);
+        td4.appendChild(percent);
 
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
+        tr.appendChild(td4);
 
         table.appendChild(tr);
     });
