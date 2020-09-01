@@ -139,6 +139,20 @@ function calculateTime(records, start, end) {
     printTable(consolodatedOutput);
 }
 
+function compare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+  
+    let comparison = 0;
+    if (nameA > nameB) {
+      comparison = 1;
+    } else if (nameA < nameB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
 function consolidate(array) {          
       var output = [];
       
@@ -183,6 +197,8 @@ function printTable(tableData) {
     var dd = "<span><i class='far fa-clock'></i>  Duration: <strong>" + meetingTime.toFixed(2) + " minutes </strong></span><br>";
     var du = "<span><i class='fas fa-users'></i> Attendees: <strong>" + tableData.length + "</strong></span>";
 
+    tableData.sort(compare);
+    
     var detArea = document.getElementById('detailSection');
     detArea.innerHTML = dorg + dst + det + dd + du;
 
@@ -212,19 +228,20 @@ function printTable(tableData) {
         var sno = document.createTextNode(n);
         n++;
         var name = document.createTextNode(row.name);
+
         var durationValue = (row.time.reduce((a,b) => a+b, 0)).toFixed(2);
+        var percentValue = ((durationValue/meetingTime)*100).toFixed(0);
         var time, percent;
 
         //checking whether the attendee joined after the given end time
         if(durationValue > 0) {
             time = document.createTextNode(durationValue);
-            percent = document.createTextNode(((durationValue/meetingTime)*100).toFixed(0) + '%');
+            percent = document.createTextNode( percentValue + '%');
         }
         else {
             time = document.createTextNode('Joined after End Time.!');
             percent = document.createTextNode('NA');
-        }
-        
+        }        
 
         td1.appendChild(sno);
         td2.appendChild(name);
@@ -235,6 +252,11 @@ function printTable(tableData) {
         tr.appendChild(td2);
         tr.appendChild(td3);
         tr.appendChild(td4);
+
+        if(parseInt(percentValue) < parseInt(document.getElementById("highlight").value)) {
+            tr.classList.add("highlight");
+        }
+            
 
         table.appendChild(tr);
     });
