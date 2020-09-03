@@ -7,12 +7,22 @@ reportSection.style.display = 'none';
 
 const input = document.querySelector('input[type="file"]');
 
+
+var attendanceData;
 var meetingStartTime;
 var meetingEndTime;
 var meetingTime;
+var organizer;
+var criteria;
+var attendeesCount;
+var selectedYear
+var meetingDetails = [];
+
 
 //Main Function
 function generate() {
+    criteria = document.getElementById("highlight").value;
+    selectedYear = document.getElementById("selectedYear").value;
 
     //Reading date and time values
     var edate = document.getElementById('edate').value;
@@ -21,58 +31,62 @@ function generate() {
     //checking for date and Time values
     if(edate !== '' && etime !== '') {
         //reading the User entered Meeting End time.
-        meetingEndTime = Date.parse(new Date(edate + "T" + etime));        
+        meetingEndTime = Date.parse(new Date(edate + "T" + etime));  
+        
+        //checking whether year is selected or not
+        if(validateYear() && validateCriteria())
+        {
+            //checking whether user has selected a file
+            if(input.files[0]) 
+            {
+                //Hiding input-div
+                inputSection.style.display = 'none';
 
-        //checking whether user has selected a file
-        if(input.files[0]) {
+                //showing spinner
+                spinner.style.display = 'block';
 
-            //Hiding input-div
-            inputSection.style.display = 'none';
+                //Creating a FileReader
+                const reader = new FileReader();
 
-            //showing spinner
-            spinner.style.display = 'block';
+                //Function for FileReader onload event - raised when read function is called
+                reader.onload = function() {
+                    
+                    //splitting the csv (text) file into records
+                    const records = reader.result.split('\n').map(function(line) {
+                        //Splitting individual records
+                        return line.split('\t');
+                    })
 
-            //Creating a FileReader
-            const reader = new FileReader();
+                    //getting meeting start time (organiser joined time is considered)
+                    meetingStartTime = Date.parse(records[1][2]);
 
-            //Function for FileReader onload event - raised when read function is called
-            reader.onload = function() {
-                
-                //splitting the csv (text) file into records
-                const records = reader.result.split('\n').map(function(line) {
-                    //Splitting individual records
-                    return line.split('\t');
-                })
+                    //calculating the meeting duration in minutes from start and end times
+                    meetingTime = ((meetingEndTime - meetingStartTime) / 1000) / 60;
 
-                //getting meeting start time (organiser joined time is considered)
-                meetingStartTime = Date.parse(records[1][2]);
+                    //Logging to console
+                    console.log("Start: " + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                    console.log("End: " + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                    console.log("Duration: " + meetingTime);
 
-                //calculating the meeting duration in minutes from start and end times
-                meetingTime = ((meetingEndTime - meetingStartTime) / 1000) / 60;
+                    calculateTime(records, meetingStartTime, meetingEndTime);
 
-                //Logging to console
-                console.log("Start: " + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-                console.log("End: " + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-                console.log("Duration: " + meetingTime);
+                    //hiding spinner
+                    spinner.style.display = 'none';
 
-                calculateTime(records, meetingStartTime, meetingEndTime);
+                    //displayig report section
+                    reportSection.style.display = 'block';
+                }
 
-                //hiding spinner
-                spinner.style.display = 'none';
-
-                //displayig report section
-                reportSection.style.display = 'block';
-            }
-
-            //calling reader function to read data from file
-            reader.readAsText(input.files[0]);
+                //calling reader function to read data from file
+                reader.readAsText(input.files[0]);
             
+            }
+            else {
+                //No file selected by the user
+                alert("Select the Attendance file.!");
+            }    
         }
-        else {
-            //No file selected by the user
-            alert("Select the Attendance file.!");
-        }    
-    }
+    }        
     else {
         //No date or Time provided by user
         alert("You must provide Date and Time");
@@ -135,8 +149,11 @@ function calculateTime(records, start, end) {
     //calling consolidation function to sum to time value for multiple Join-Left records
     var consolodatedOutput = consolidate(timesArray);
 
+    attendanceData = consolodatedOutput;
+
+
     //Populating a table with attendee name and time present in meeting.
-    printTable(consolodatedOutput);
+    printTable();
 }
 
 function compare(a, b) {
@@ -184,104 +201,138 @@ function consolidate(array) {
       return output;
 }
 
-function printTable(tableData) {
+function printTable() {
+    
+    organizer = attendanceData[0].name;
+    attendeesCount = attendanceData.length;
+
+    attendanceData.sort(compare);
+    formatData();
+    var report = checkAttendance();
 
     //clearing previous report data, if any
     var area = document.getElementById('reportArea');
     area.innerHTML = "";
 
     //printing Meeting details
-    var dorg = "<span><i class='fas fa-user-clock'></i>  Organizer: <strong>" + tableData[0].name + "</strong></span><br>";
+    var dorg = "<span><i class='fas fa-user-clock'></i>  Organizer: <strong>" + organizer + "</strong></span><br>";
     var dst= "<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong>" + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
     var det= "<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong>" + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
     var dd = "<span><i class='far fa-clock'></i>  Duration: <strong>" + meetingTime.toFixed(2) + " minutes </strong></span><br>";
-    var du = "<span><i class='fas fa-users'></i> Attendees: <strong>" + tableData.length + "</strong></span>";
-
-    tableData.sort(compare);
+    var du = "<span><i class='fas fa-users'></i> Attendees: <strong>" + attendeesCount + "</strong></span>";
+        
+    meetingDetails.push(["Organizer", "Meeting Start Time", "Meeting End Time", "Duration", "Attendees"]);
+    meetingDetails.push([organizer, new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}), new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}), meetingTime.toFixed(2), attendeesCount ])
+    
     
     var detArea = document.getElementById('detailSection');
     detArea.innerHTML = dorg + dst + det + dd + du;
 
+    //creating Summary details table
+    var summaryTable = document.createElement('table');
+    summaryTable.id = "summaryTable";
+    summaryTable.classList.add("table");
+    //stable.classList.add("table-borderless");
+
+    var sthr = document.createElement('tr');
+    sthr.innerHTML = "<th>Class/Batch strength</th> <th>Students Present</th> <th>Complete Absent (0%)</th> <th>Absent (Present for &lt;"+criteria.toString()+"%)</th> <th>Faculty/Others</th>";
+    
+    var stdr = document.createElement('tr');
+    stdr.innerHTML = "<td>"+strength.toString()+"</td><td>"+presentCount.toString()+"</td><td>"+absentCount.toString()+"</td><td>"+durationAbsentCount.toString()+"</td><td>"+(report.length-strength).toString()+"</td>";
+
+    summaryTable.appendChild(sthr);
+    summaryTable.appendChild(stdr);
+
+    area.appendChild(summaryTable);
+
+    var absenteeDetails = document.createElement('div');
+    absenteeDetails.classList.add('alert', 'alert-danger');
+    absenteeDetails.innerHTML = "<h4>Absentees RegNo. ("+ (absentCount+durationAbsentCount).toString() +")</h4>" + absentees;
+
+    area.appendChild(absenteeDetails);
+
     //creating a table and adding styling
-    var table = document.createElement('table');
-    table.id = "reportTable";
-    table.classList.add("table");
+    var reportTable = document.createElement('table');
+    reportTable.id = "reportTable";
+    reportTable.classList.add("table");
 
     //creating header row
     var tr = document.createElement('tr');
-    tr.innerHTML = "<th>S.No</th><th>Attendee Name</th><th>Duration (in minutes)</th><th>Percentage of time</th>";
+    tr.innerHTML = "<th>S.No</th><th>Reg No.</th><th>Student Name</th><th>Duration (in minutes)</th><th>Percentage</th><th>Attendance</th>";
 
     //appending header to table
-    table.appendChild(tr);
+    reportTable.appendChild(tr);
 
     var n = 1;
 
     //creating a table row for each record and appending it to table
-    tableData.forEach(function(row) {
+    report.forEach(function(row) {
         var tr = document.createElement('tr');
 
         var td1 = document.createElement('td');
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
         var td4 = document.createElement('td');
+        var td5 = document.createElement('td');
+        var td6 = document.createElement('td');
 
         var sno = document.createTextNode(n);
         n++;
+        var regno = document.createTextNode(row.regno);
         var name = document.createTextNode(row.name);
 
-        var durationValue = (row.time.reduce((a,b) => a+b, 0)).toFixed(2);
-        var percentValue = ((durationValue/meetingTime)*100).toFixed(0);
-        var time, percent;
-
         //checking whether the attendee joined after the given end time
-        if(durationValue > 0) {
-            time = document.createTextNode(durationValue);
-            percent = document.createTextNode( percentValue + '%');
+        if(row.duration >= 0) {
+            time = document.createTextNode(row.duration.toString());
+            percent = document.createTextNode(row.percentage.toString() + "%");            
         }
         else {
             time = document.createTextNode('Joined after End Time.!');
-            percent = document.createTextNode('NA');
-        }        
+            percent = document.createTextNode("NA");
+        }    
+        
+        var attend = document.createTextNode(row.attendance);
 
         td1.appendChild(sno);
-        td2.appendChild(name);
-        td3.appendChild(time);
-        td4.appendChild(percent);
+        td2.appendChild(regno)
+        td3.appendChild(name);
+        td4.appendChild(time);
+        td5.appendChild(percent);
+        td6.appendChild(attend);
 
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
         tr.appendChild(td4);
+        tr.appendChild(td5);
+        tr.appendChild(td6);
 
-        if(parseInt(percentValue) < parseInt(document.getElementById("highlight").value)) {
+        if(parseInt(row.percentage) < parseInt(criteria)) {
             tr.classList.add("highlight");
-        }
-            
+        }            
 
-        table.appendChild(tr);
+        reportTable.appendChild(tr);
     });
 
-    area.appendChild(table);
+    area.appendChild(reportTable);
 }
 
-function exportToExcel(){
-
-    //converting the HTML table to excel workbook using  table_to_book from SheetJS library
-    var wb = XLSX.utils.table_to_book(document.getElementById('reportTable'), {sheet:"Teams Attendance"});
-
-    //Writing the Workbook to binary format
-    var wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-
-    //function to create a BLOB from binary stream
-    function s2ab(s) {
-                    var buf = new ArrayBuffer(s.length);
-                    var view = new Uint8Array(buf);
-                    for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-                    return buf;
+function validateYear() {
+    if(selectedYear != '' ) 
+        return true;
+    else {
+        alert("Select Year.!");
+        return false;
     }
+}
 
-    //calling saveAs function for the user to be able to download the Blob(workbook)
-    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'Attendance_' + meetingStartTime + '.xlsx' );
+function validateCriteria() {
+    if(criteria != '' ) 
+        return true;
+    else {
+        criteria = 1;
+        return true;
+    }
 }
 
 function back() {

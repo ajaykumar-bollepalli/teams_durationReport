@@ -11,7 +11,7 @@
 <body id="body">
     <div class="jumbotron">
         <div class="container">
-            <h1>Duration Report for Microsoft Teams Attendance</h1>
+            <h1> <span class="badge badge-danger">VVIT-IT</span> Duration Report for Microsoft Teams Attendance</h1>
             <p class="lead">Upload the Attendance file (.csv[text]) from Teams as is.</p>
         </div>
     </div>    
@@ -32,15 +32,34 @@
                             <input type="time" id="etime" required>
                         </div>
                         <div class="col-12 col-lg-4">
+                            <label for="selectedYear">Year: </label>
+                            <select id="selectedYear" required>
+                                <option value="" disabled selected hidden>--Select Year--</option>
+                                <option value="2">II Year</option>
+                                <option value="3">III Year</option>
+                                <option value="4">IV Year</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <div class="row">
+                        
+                        <div class="col-12 col-lg-4">
                             <label for="highlight">Highlight if duration less than: </label>
                             <input type="number" min="10" max="99" id="highlight" placeholder="10-99" required>
                             %
                         </div>
-                    </div>                                
-                </div>            
-                <div class="form-group">
-                    <label for="browseFile">Select Attendance File (.csv[tab spaced]): </label>
-                    <input type="file" id="browseFile" class="form-control">
+                    </div>
+                </div>                               
+                           
+                <div class="form-group">                    
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="browseFile">Select Attendance File (.csv[tab spaced]): </label>
+                                <input type="file" id="browseFile" class="form-control">
+                            </div>
+                        </div>                        
                 </div>                   
             </div>
             <div class="card-footer">
@@ -66,7 +85,7 @@
                     <h4 class="alert-heading">Meeting Details</h4>
                     <div id="detailSection"></div>
                 </div>
-                <h3>Duration Report</h4>
+                <h3>Attendance Report</h4>
                 <br>
                 <div id="reportArea"></div> 
             </div>
@@ -90,7 +109,7 @@
                         <span><i class="fas fa-tools"></i> Developed by: <a href="https://www.linkedin.com/in/ajaykumar-bollepalli/" target="_blank"><strong>Ajay Kumar Bollepalli</strong></a></span>
                     </div>
                     <div class="col-12 col-lg-6 text-right">
-                        <h5><a href="https://github.com/ajaykumar-bollepalli/teams_durationReport" target="_blank" class="badge badge-primary">Find this repository on <i class="fab fa-github fa-lg"></i> Github</a></h5>
+                        <h5><a href="https://github.com/ajaykumar-bollepalli/teams_durationReport/tree/vvit-report" target="_blank" class="badge badge-primary">Find this repository on <i class="fab fa-github fa-lg"></i> Github</a></h5>
                     </div>
                 </div>                 
             </div>
@@ -103,9 +122,10 @@
             <div class="disclaimer">
                 <p class="text-justify"><strong>Disclaimer: </strong> Author do not make any warranties about the completness, reliability and accuracy of the information on this site and working of the applicaiton. The names <cite>Microsoft</cite> & <cite>Microsoft Teams</cite> belong to the respective Organizations, and are used only as reference. The Author or the site does not have any liability in respect to those Organizations and Applications.</p>            
             </div>
-            
         </div>                        
     </footer>        
+    <script src="js/dops.js"></script>
+    <script src="js/eops.js"></script>
     <script src="js/main.js"></script>
     <script lang="javascript" src="js/xlsx.full.min.js"></script>
     <script lang="javascript" src="js/FileSaver.min.js"></script>
