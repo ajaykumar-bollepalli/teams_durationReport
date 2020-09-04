@@ -102,26 +102,17 @@ function calculateTime(records, start, end) {
             var joinTime = Date.parse(currentRow[2]);
 
             //Checking whether the next record belongs to same attendee name (mapping)
-            if(nextRow !== undefined && (currentRow[0] === nextRow[0])) { //Has a consecutive row
+            if(nextRow !== undefined && (currentRow[0] === nextRow[0]))  //Has a consecutive row
+            {
 
-                //Checking whether the nextRow is a Left record of currentRow Join
-                if(nextRow[1]=== "Left") { //Consecutive row is a Left record
+                //getting Left time or NEXT JOIN from nextRow
+                var leftTime = Date.parse(nextRow[2]);
 
-                    //getting Left time from nextRow
-                    var leftTime = Date.parse(nextRow[2]);
-
-                    //Calculating time and creating the object, adding it to timesArray
-                    //Using Join time in currentRow and Left time from nextRow
-                    timesArray[timesArrayIndex] = {name: currentRow[0], time: ((leftTime-joinTime)/1000)/60 };
-                    timesArrayIndex++;
-                }
-                else {
-                    //Has Left record but no corresponding Join record 
-                    //(two consecutive Left records)
-                    console.log("Error: Record missing - " + i+1);
-                    continue;
-                }
-            }  
+                //Calculating time and creating the object, adding it to timesArray
+                 //Using Join time in currentRow and Left time from nextRow
+                timesArray[timesArrayIndex] = {name: currentRow[0], time: ((leftTime-joinTime)/1000)/60 };
+                timesArrayIndex++;
+            }
             else {
                 //Calculating time and creating the object, adding it to timesArray
                 //Using Join time in currentRow and meetingEndTime as there is no corresponding Left record                
@@ -191,11 +182,11 @@ function printTable(tableData) {
     area.innerHTML = "";
 
     //printing Meeting details
-    var dorg = "<span><i class='fas fa-user-clock'></i>  Organizer: <strong>" + tableData[0].name + "</strong></span><br>";
-    var dst= "<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong>" + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
-    var det= "<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong>" + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
-    var dd = "<span><i class='far fa-clock'></i>  Duration: <strong>" + meetingTime.toFixed(2) + " minutes </strong></span><br>";
-    var du = "<span><i class='fas fa-users'></i> Attendees: <strong>" + tableData.length + "</strong></span>";
+    var dorg = `<span><i class='fas fa-user-clock'></i>  Organizer: <strong>${tableData[0].name}</strong></span><br>`;
+    var dst= `<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong> ${new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})} </strong></span><br>`;
+    var det= `<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong> ${new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})} </strong></span><br>`;
+    var dd = `<span><i class='far fa-clock'></i>  Duration: <strong> ${meetingTime.toFixed(2)} minutes </strong></span><br>`;
+    var du = `<span><i class='fas fa-users'></i> Attendees: <strong> ${tableData.length} </strong></span>`;
 
     tableData.sort(compare);
     
