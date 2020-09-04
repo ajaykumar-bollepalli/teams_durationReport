@@ -10,9 +10,11 @@ const input = document.querySelector('input[type="file"]');
 var meetingStartTime;
 var meetingEndTime;
 var meetingTime;
+var criteria;
 
 //Main Function
 function generate() {
+    criteria = document.getElementById("highlight").value;
 
     //Reading date and time values
     var edate = document.getElementById('edate').value;
@@ -23,55 +25,58 @@ function generate() {
         //reading the User entered Meeting End time.
         meetingEndTime = Date.parse(new Date(edate + "T" + etime));        
 
-        //checking whether user has selected a file
-        if(input.files[0]) {
+        if(validateCriteria()) 
+        {
+            //checking whether user has selected a file
+            if(input.files[0]) {
 
-            //Hiding input-div
-            inputSection.style.display = 'none';
+                //Hiding input-div
+                inputSection.style.display = 'none';
 
-            //showing spinner
-            spinner.style.display = 'block';
+                //showing spinner
+                spinner.style.display = 'block';
 
-            //Creating a FileReader
-            const reader = new FileReader();
+                //Creating a FileReader
+                const reader = new FileReader();
 
-            //Function for FileReader onload event - raised when read function is called
-            reader.onload = function() {
+                //Function for FileReader onload event - raised when read function is called
+                reader.onload = function() {
+                    
+                    //splitting the csv (text) file into records
+                    const records = reader.result.split('\n').map(function(line) {
+                        //Splitting individual records
+                        return line.split('\t');
+                    })
+
+                    //getting meeting start time (organiser joined time is considered)
+                    meetingStartTime = Date.parse(records[1][2]);
+
+                    //calculating the meeting duration in minutes from start and end times
+                    meetingTime = ((meetingEndTime - meetingStartTime) / 1000) / 60;
+
+                    //Logging to console
+                    console.log("Start: " + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                    console.log("End: " + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+                    console.log("Duration: " + meetingTime);
+
+                    calculateTime(records, meetingStartTime, meetingEndTime);
+
+                    //hiding spinner
+                    spinner.style.display = 'none';
+
+                    //displayig report section
+                    reportSection.style.display = 'block';
+                }
+
+                //calling reader function to read data from file
+                reader.readAsText(input.files[0]);
                 
-                //splitting the csv (text) file into records
-                const records = reader.result.split('\n').map(function(line) {
-                    //Splitting individual records
-                    return line.split('\t');
-                })
-
-                //getting meeting start time (organiser joined time is considered)
-                meetingStartTime = Date.parse(records[1][2]);
-
-                //calculating the meeting duration in minutes from start and end times
-                meetingTime = ((meetingEndTime - meetingStartTime) / 1000) / 60;
-
-                //Logging to console
-                console.log("Start: " + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-                console.log("End: " + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
-                console.log("Duration: " + meetingTime);
-
-                calculateTime(records, meetingStartTime, meetingEndTime);
-
-                //hiding spinner
-                spinner.style.display = 'none';
-
-                //displayig report section
-                reportSection.style.display = 'block';
             }
-
-            //calling reader function to read data from file
-            reader.readAsText(input.files[0]);
-            
-        }
-        else {
-            //No file selected by the user
-            alert("Select the Attendance file.!");
-        }    
+            else {
+                //No file selected by the user
+                alert("Select the Attendance file.!");
+            } 
+        }                   
     }
     else {
         //No date or Time provided by user
@@ -244,7 +249,7 @@ function printTable(tableData) {
         tr.appendChild(td3);
         tr.appendChild(td4);
 
-        if(parseInt(percentValue) < parseInt(document.getElementById("highlight").value)) {
+        if(parseInt(percentValue) < parseInt(criteria)) {
             tr.classList.add("highlight");
         }
             
@@ -275,15 +280,12 @@ function exportToExcel(){
     saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'Attendance_' + meetingStartTime + '.xlsx' );
 }
 
-function back() {
-    //hiding report section
-    reportSection.style.display = 'none';
 
-    //resetting input controls
-    document.getElementById('edate').value = '';
-    document.getElementById('etime').value = '';
-    input.value = "";
-
-    //displaying inputsection
-    inputSection.style.display = 'block';
+function validateCriteria() {
+    if(criteria != '' ) 
+        return true;
+    else {
+        criteria = 1;
+        return true;
+    }
 }
