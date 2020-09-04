@@ -1,5 +1,5 @@
-var rollData;
-var strength, presentCount=0, absentCount=0, durationAbsentCount=0, totalCount=0;
+var rollData; // dont reset this variable data is only read once
+var strength=0, presentCount=0, absentCount=0, durationAbsentCount=0, totalCount=0;
 var absentees = [];
 
 //reading data from JSON file
@@ -49,12 +49,14 @@ function checkAttendance() {
     data.forEach(student => {
         var result = attendanceData.filter(record => record.regno.toUpperCase() === student.regno.toUpperCase())
         if(result.length > 0) {
-            if(parseInt(result[0].percentage) < parseInt(criteria) ) {
-                report.push({ "regno" : result[0].regno, "name": result[0].name, "duration": result[0].duration, "percentage": result[0].percentage, "attendance":"A"});
+            const {regno, name, duration, percentage} = result[0];
+
+            if(parseInt(percentage) < parseInt(criteria) ) {
+                report.push({ "regno" : regno, "name": name, "duration": duration, "percentage": percentage, "attendance":"A"});
                 durationAbsentCount++;
-                absentees.push(result[0].regno);
+                absentees.push(regno);
             } else {
-                report.push({ "regno" : result[0].regno, "name": result[0].name, "duration": result[0].duration, "percentage": result[0].percentage, "attendance":"P"});
+                report.push({ "regno" : regno, "name": name, "duration": duration, "percentage": percentage, "attendance":"P"});
                 presentCount++;
             }
             
@@ -70,7 +72,8 @@ function checkAttendance() {
     var others = attendanceData.filter(record => record.regno === "Faculty/Others");
     if(others.length > 0){
         others.forEach(attendee => {
-            report.push({ "regno" : attendee.regno, "name": attendee.name, "duration": attendee.duration, "percentage": attendee.percentage, "attendance":"P"});
+            const {regno, name, duration, percentage} = attendee;
+            report.push({ "regno" : regno, "name": name, "duration": duration, "percentage": percentage, "attendance":"P"});
             totalCount++;
         })
     }

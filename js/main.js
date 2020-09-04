@@ -15,7 +15,7 @@ var meetingTime;
 var organizer;
 var criteria;
 var attendeesCount;
-var selectedYear
+var selectedYear;
 var meetingDetails = [];
 
 
@@ -119,7 +119,7 @@ function calculateTime(records, start, end) {
             if(nextRow !== undefined && (currentRow[0] === nextRow[0])) { //Has a consecutive row
 
                 //Checking whether the nextRow is a Left record of currentRow Join
-                if(nextRow[1]=== "Left") { //Consecutive row is a Left record
+                //if(nextRow[1]=== "Left") { //Consecutive row is a Left record
 
                     //getting Left time from nextRow
                     var leftTime = Date.parse(nextRow[2]);
@@ -128,13 +128,13 @@ function calculateTime(records, start, end) {
                     //Using Join time in currentRow and Left time from nextRow
                     timesArray[timesArrayIndex] = {name: currentRow[0], time: ((leftTime-joinTime)/1000)/60 };
                     timesArrayIndex++;
-                }
+                /*}
                 else {
                     //Has Left record but no corresponding Join record 
                     //(two consecutive Left records)
                     console.log("Error: Record missing - " + i+1);
                     continue;
-                }
+                }*/
             }  
             else {
                 //Calculating time and creating the object, adding it to timesArray
@@ -215,11 +215,11 @@ function printTable() {
     area.innerHTML = "";
 
     //printing Meeting details
-    var dorg = "<span><i class='fas fa-user-clock'></i>  Organizer: <strong>" + organizer + "</strong></span><br>";
-    var dst= "<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong>" + new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
-    var det= "<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong>" + new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}) + "</strong></span><br>";
-    var dd = "<span><i class='far fa-clock'></i>  Duration: <strong>" + meetingTime.toFixed(2) + " minutes </strong></span><br>";
-    var du = "<span><i class='fas fa-users'></i> Attendees: <strong>" + attendeesCount + "</strong></span>";
+    var dorg = `<span><i class='fas fa-user-clock'></i>  Organizer: <strong>${organizer}</strong></span><br>`;
+    var dst= `<span><i class='far fa-play-circle'></i>  Meeting Start time: <strong>${new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})}</strong></span><br>`;
+    var det= `<span><i class='far fa-stop-circle'></i>  Meeting End time: <strong>${new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"})}</strong></span><br>`;
+    var dd = `<span><i class='far fa-clock'></i>  Duration: <strong>${meetingTime.toFixed(2)} minutes </strong></span><br>`;
+    var du = `<span><i class='fas fa-users'></i> Attendees: <strong>${attendeesCount}</strong></span>`;
         
     meetingDetails.push(["Organizer", "Meeting Start Time", "Meeting End Time", "Duration", "Attendees"]);
     meetingDetails.push([organizer, new Date(meetingStartTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}), new Date(meetingEndTime).toLocaleString("en-US", {timeZone: "Asia/Kolkata"}), meetingTime.toFixed(2), attendeesCount ])
@@ -235,10 +235,10 @@ function printTable() {
     //stable.classList.add("table-borderless");
 
     var sthr = document.createElement('tr');
-    sthr.innerHTML = "<th>Class/Batch strength</th> <th>Students Present</th> <th>Complete Absent (0%)</th> <th>Absent (Present for &lt;"+criteria.toString()+"%)</th> <th>Faculty/Others</th>";
+    sthr.innerHTML = `<th>Class/Batch strength</th> <th>Students Present</th> <th>Complete Absent (0%)</th> <th>Absent (Present for &lt;${criteria.toString()}%)</th> <th>Faculty/Others</th>`;
     
     var stdr = document.createElement('tr');
-    stdr.innerHTML = "<td>"+strength.toString()+"</td><td>"+presentCount.toString()+"</td><td>"+absentCount.toString()+"</td><td>"+durationAbsentCount.toString()+"</td><td>"+(report.length-strength).toString()+"</td>";
+    stdr.innerHTML = `<td>${strength.toString()}</td><td>${presentCount.toString()}</td><td>${absentCount.toString()}</td><td>${durationAbsentCount.toString()}</td><td>${(report.length-strength).toString()}</td>`;
 
     summaryTable.appendChild(sthr);
     summaryTable.appendChild(stdr);
@@ -247,7 +247,7 @@ function printTable() {
 
     var absenteeDetails = document.createElement('div');
     absenteeDetails.classList.add('alert', 'alert-danger');
-    absenteeDetails.innerHTML = "<h4>Absentees RegNo. ("+ (absentCount+durationAbsentCount).toString() +")</h4>" + absentees;
+    absenteeDetails.innerHTML = `<h4>Absentees RegNo. (${ (absentCount+durationAbsentCount).toString() })</h4>${absentees}`;
 
     area.appendChild(absenteeDetails);
 
@@ -336,14 +336,33 @@ function validateCriteria() {
 }
 
 function back() {
-    //hiding report section
-    reportSection.style.display = 'none';
 
-    //resetting input controls
-    document.getElementById('edate').value = '';
-    document.getElementById('etime').value = '';
-    input.value = "";
+    //reloading page
+    location.reload();
 
-    //displaying inputsection
-    inputSection.style.display = 'block';
+    // //hiding report section
+    // reportSection.style.display = 'none';
+
+    // //resetting input controls
+    // document.getElementById('edate').value = '';
+    // document.getElementById('etime').value = '';
+    // document.getElementById('highlight').value = '';
+    // document.getElementById('selectedYear').value = '';
+    // input.value = "";
+
+    // //resetting variables
+    // attendanceData = [];
+    // meetingStartTime = '';
+    // meetingEndTime = '';
+    // meetingTime = '';
+    // organizer = '';
+    // criteria = '';
+    // attendeesCount = '';
+    // selectedYear= '';
+    // meetingDetails = [];
+    // strength=0, presentCount=0, absentCount=0, durationAbsentCount=0, totalCount=0;
+    // absentees = [];
+
+    // //displaying inputsection
+    // inputSection.style.display = 'block';
 }
